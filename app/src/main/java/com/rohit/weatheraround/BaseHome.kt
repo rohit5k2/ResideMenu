@@ -1,41 +1,87 @@
 package com.rohit.weatheraround
 
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.design.widget.NavigationView
-import android.support.v4.view.GravityCompat
-import android.support.v7.app.ActionBarDrawerToggle
-import android.support.v7.app.AppCompatActivity
-import android.view.Menu
-import android.view.MenuItem
+import android.support.v4.app.FragmentActivity
+import android.util.Log
+import android.view.*
 import kotlinx.android.synthetic.main.base_home.*
-import kotlinx.android.synthetic.main.app_bar_main.*
+import com.special.ResideMenu.ResideMenu
+import com.special.ResideMenu.ResideMenuItem
 
-class BaseHome : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+
+
+abstract class BaseHome : FragmentActivity() {
+
+    var resideMenu:ResideMenu? = null
+    val menuItems:ArrayList<ResideMenuItem> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.base_home)
-        setSupportActionBar(toolbar)
-
-        val toggle = ActionBarDrawerToggle(
-                this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
-        drawer_layout.addDrawerListener(toggle)
-        toggle.syncState()
-
-        nav_view.setNavigationItemSelectedListener(this)
+        super.setContentView(R.layout.base_home)
+        attachResideMenu()
     }
 
     override fun setContentView(layoutResID: Int) {
-        super.setContentView(layoutResID)
+        //super.setContentView(layoutResID)
+        val laytoutInflater:LayoutInflater = LayoutInflater.from(this@BaseHome)
+        val v = laytoutInflater.inflate(layoutResID, null, false)
+        screen_parent.addView(v)
+        //setContentView(screen_parent)
+    }
+
+    private fun attachResideMenu(){
+        // attach to current activity;
+        resideMenu = ResideMenu(this)
+        resideMenu?.setBackground(R.drawable.tree)
+        resideMenu?.setShadowVisible(true)
+        //resideMenu?.setBackgroundColor(resources.getColor(R.color.golden_trans))
+        resideMenu?.attachToActivity(this)
+
+        // create menu items;
+        val titles = arrayOf("Home", "Profile", "Calendar", "Settings")
+        val icon = intArrayOf(R.drawable.ic_menu_gallery, R.drawable.ic_menu_gallery, R.drawable.ic_menu_gallery, R.drawable.ic_menu_gallery)
+
+        for (i in titles.indices) {
+            val item = ResideMenuItem(this, icon[i], titles[i])
+            menuItems.add(item)
+            item.setOnClickListener(resideMenuClick)
+            resideMenu?.addMenuItem(item, ResideMenu.DIRECTION_LEFT) // or  ResideMenu.DIRECTION_RIGHT
+        }
+
+        resideMenu?.menuListener = menuListener
+
+        hamburger_menu.setOnClickListener{
+            resideMenu?.openMenu(ResideMenu.DIRECTION_LEFT) // or ResideMenu.DIRECTION_RIGHT
+            //resideMenu?.closeMenu()
+        }
+    }
+
+    val resideMenuClick = View.OnClickListener {
+        if(it == menuItems.get(0)){
+            Log.d("BaseHome::resideMenuClk", "item 0 clicked")
+        }
+    }
+
+    val menuListener = object : ResideMenu.OnMenuListener{
+        override fun openMenu() {
+
+        }
+
+        override fun closeMenu() {
+
+        }
+    }
+
+    override fun setContentView(view: View?) {
+        throw NotImplementedError()
+    }
+
+    override fun setContentView(view: View?, params: ViewGroup.LayoutParams?) {
+        throw NotImplementedError()
     }
 
     override fun onBackPressed() {
-        if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
-            drawer_layout.closeDrawer(GravityCompat.START)
-        } else {
-            super.onBackPressed()
-        }
+        super.onBackPressed()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -52,32 +98,5 @@ class BaseHome : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLis
             R.id.action_settings -> return true
             else -> return super.onOptionsItemSelected(item)
         }
-    }
-
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        // Handle navigation view item clicks here.
-        when (item.itemId) {
-            R.id.nav_camera -> {
-                // Handle the camera action
-            }
-            R.id.nav_gallery -> {
-
-            }
-            R.id.nav_slideshow -> {
-
-            }
-            R.id.nav_manage -> {
-
-            }
-            R.id.nav_share -> {
-
-            }
-            R.id.nav_send -> {
-
-            }
-        }
-
-        drawer_layout.closeDrawer(GravityCompat.START)
-        return true
     }
 }
