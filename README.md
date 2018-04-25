@@ -1,3 +1,3 @@
-# WeatherAround
+# Reside Menu
 
-#An app written with Kotlin for weather
+#An app written with Kotlin for Reside Menu
