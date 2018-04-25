@@ -1,4 +1,4 @@
-package com.rohit.weatheraround
+package com.rohit.residemenu
 
 import org.junit.Test
 

@@ -1,4 +1,4 @@
-package com.rohit.weatheraround
+package com.rohit.residemenu
 
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
@@ -8,12 +8,10 @@ import kotlinx.android.synthetic.main.base_home.*
 import com.special.ResideMenu.ResideMenu
 import com.special.ResideMenu.ResideMenuItem
 
-
-
 abstract class BaseHome : FragmentActivity() {
 
-    var resideMenu:ResideMenu? = null
-    val menuItems:ArrayList<ResideMenuItem> = ArrayList()
+    private var resideMenu:ResideMenu? = null
+    private val menuItems:ArrayList<ResideMenuItem> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,8 +21,8 @@ abstract class BaseHome : FragmentActivity() {
 
     override fun setContentView(layoutResID: Int) {
         //super.setContentView(layoutResID)
-        val laytoutInflater:LayoutInflater = LayoutInflater.from(this@BaseHome)
-        val v = laytoutInflater.inflate(layoutResID, null, false)
+        val layoutInflater:LayoutInflater = LayoutInflater.from(this@BaseHome)
+        val v = layoutInflater.inflate(layoutResID, null, false)
         screen_parent.addView(v)
         //setContentView(screen_parent)
     }
@@ -39,7 +37,10 @@ abstract class BaseHome : FragmentActivity() {
 
         // create menu items;
         val titles = arrayOf("Home", "Profile", "Calendar", "Settings")
-        val icon = intArrayOf(R.drawable.ic_menu_gallery, R.drawable.ic_menu_gallery, R.drawable.ic_menu_gallery, R.drawable.ic_menu_gallery)
+        val icon = intArrayOf(R.drawable.ic_menu_gallery,
+                R.drawable.ic_menu_gallery,
+                R.drawable.ic_menu_gallery,
+                R.drawable.ic_menu_gallery)
 
         for (i in titles.indices) {
             val item = ResideMenuItem(this, icon[i], titles[i])
@@ -56,13 +57,13 @@ abstract class BaseHome : FragmentActivity() {
         }
     }
 
-    val resideMenuClick = View.OnClickListener {
-        if(it == menuItems.get(0)){
+    private val resideMenuClick = View.OnClickListener {
+        if(it == menuItems[0]){
             Log.d("BaseHome::resideMenuClk", "item 0 clicked")
         }
     }
 
-    val menuListener = object : ResideMenu.OnMenuListener{
+    private val menuListener = object : ResideMenu.OnMenuListener{
         override fun openMenu() {
 
         }
